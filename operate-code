@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<MarkCode>
+  <serviceCode id="75669521"
+               name="ME Management"
+               desc="Config Management">
+    <featureCode id="75670052"
+                 name="ME Management"
+                 desc="ME Management">
+      <operationCode>
+      	<code>75673765</code>
+        <name>receiveWakeUpDataFromPMU</name>
+        <desc>receiveWakeUpDataFromPMU</desc>
+        <className>
+          com.one.mask.jms.wakeup.WkUpCmuJmsMgr
+         </className>
+        <objMode>0</objMode>
+        <methodName>receiveWakeUpDataFromPMU</methodName>
+        <logType>0</logType>
+      </operationCode>  
+      <operationCode>
+      	<code>75673766</code>
+        <name>receiveWakeUpDataFromCMU</name>
+        <desc>receiveWakeUpDataFromCMU</desc>
+        <className>
+          com.huawei.uportal.ipcc.smartcenter.wakeup.WkUpPmuJmsMgr
+        </className>
+        <objMode>0</objMode>
+        <methodName>receiveWakeUpDataFromCMU</methodName>
+        <logType>0</logType>
+      </operationCode> 
+    </featureCode>
+  </serviceCode>
+</MarkCode>
