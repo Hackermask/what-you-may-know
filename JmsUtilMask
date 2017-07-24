@@ -1,0 +1,119 @@
+package com.one.mask.util.jms;
+
+import javax.jms.JMSException;
+
+public class JmsUtilMask {
+
+    private static Object sendJmsAndRec(String url, String jmsQueue, RequestBean reqBean, long timeOut)
+            throws JMSException
+    {
+        Object returnObj = null;
+        ResponseBean responseBean = null;
+        Object responseObject = null;
+
+        returnObj = sendSyncMessage(url, jmsQueue, reqBean, timeOut);
+
+        if (returnObj != null && returnObj instanceof ResponseBean)
+        {
+            responseBean = (ResponseBean) returnObj;
+
+            if ("0".equals(responseBean.getRetCode()))
+            {
+                responseObject = responseBean.getResponseObj();
+            }
+            else
+            {
+                if (!"jmsQueue".equals(jmsQueue))
+                {
+                }
+            }
+        }
+        else
+        {
+        }
+
+        return responseObject;
+    }
+
+    private static boolean sendMessage(String url, String jmsQueue, RequestBean reqBean)
+    {
+        JmsSenderProxy jmsSenderProxy = null;
+        try
+        {
+            jmsSenderProxy = JmsProxy.createSenderProxy(url, jmsQueue);
+            jmsSenderProxy.createSession("", "", url, jmsQueue);
+            jmsSenderProxy.send(reqBean);
+        }
+        catch (JMSException e)
+        {
+            return false;
+        }
+        finally
+        {
+            if (jmsSenderProxy != null)
+            {
+                jmsSenderProxy.close();
+            }
+        }
+        return true;
+    }
+
+    public static Object sendSyncJMS(String url, String commandCode, Object[] reqObjArray) throws JMSException
+    {
+        return sendSyncJMS(url, commandCode, reqObjArray, 30);
+    }
+
+    public static Object sendSyncJMS(String url, String commandCode, Object[] reqObjArray, long timeOut)
+            throws JMSException
+    {
+        Object responseObject = null;
+
+        RequestBean reqBean = null;
+
+        // 组装RequestBean对象
+        reqBean = new RequestBean();
+        reqBean.setCommandCode(commandCode);
+
+        reqBean.setRequestObj(reqObjArray);
+
+        responseObject = sendJmsAndRec(url, "jmsQueue", reqBean, timeOut);
+
+        return responseObject;
+    }
+
+    private static Object sendSyncMessage(String url, String jmsQueue, RequestBean reqBean, long timeOut)
+            throws JMSException
+    {
+        Object returnObj = null;
+
+        // 发同步消息
+        JmsSenderProxy jmsSenderProxy = null;
+
+        try
+        {
+            jmsSenderProxy = JmsProxy.createSenderProxy(url, jmsQueue);
+            jmsSenderProxy.createSession("", "", url, jmsQueue);
+            if (timeOut == 0)
+            {
+                returnObj = jmsSenderProxy.sendSyncMessage(reqBean);
+            }
+            else
+            {
+                returnObj = jmsSenderProxy.sendSyncMessage(reqBean, timeOut);
+            }
+        }
+        catch (JMSException e)
+        {
+            throw e;
+        }
+        finally
+        {
+            if (jmsSenderProxy != null)
+            {
+                jmsSenderProxy.close();
+            }
+        }
+
+        return returnObj;
+    }
+}
