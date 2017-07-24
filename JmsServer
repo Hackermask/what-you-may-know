@@ -1,0 +1,29 @@
+public class JmsServer {
+	
+	private static final Logger logger = Logger.getLogger(JmsServer.class);
+    
+    public BrokerService broker = new BrokerService();
+
+    public void start()
+    {
+        try
+        {
+            broker.addConnector("tcp://127.0.0.1:61616");
+            
+            broker.setUseJmx(false);
+            broker.start();
+            
+        }
+        catch (Exception e)
+        {
+            logger.error("JmsServer::start(): Exception:");
+            logger.error(e);
+            throw new RuntimeException("JmsServer error.");
+        }
+    }
+    
+    public boolean isStarted()
+    {
+        return broker.isStarted();
+    }
+}
