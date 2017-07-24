@@ -1,0 +1,32 @@
+public class JmsMessage {
+	private static final Logger logger = Logger
+            .getLogger(JmsMessage.class);
+	
+	private ObjectMessage jmsMessage = null;
+	
+	public JmsMessage(ObjectMessage message) {
+		this.jmsMessage = message;
+	}
+
+	public String getProperty(String name)
+	{
+		String value = null;
+		try {
+			value = jmsMessage.getStringProperty(name);
+		} catch (JMSException e) {
+			logger.error("get " + name + " error : " + e);
+		}
+		return value;
+	}
+
+	public Object getRequestMessage()
+	{
+		Object obj = null;
+		try {
+			obj = jmsMessage.getObject();
+		} catch (JMSException e) {
+			logger.error(e);
+		}
+		return obj;
+	}
+}
